@@ -72,13 +72,18 @@ export default function Home() {
   const onSubmitHandler = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api', formData)
-      toast.success(response.data.msg)
-      setFormData({
-        title: '',
-        description: '',
-      })
-      await fetchTodo()
+      if (!formData.title || !formData.description) {
+        toast.error('Title or description shouldn`t be empty')
+        return
+      } else {
+        const response = await axios.post('/api', formData)
+        toast.success(response.data.msg)
+        setFormData({
+          title: '',
+          description: '',
+        })
+        await fetchTodo()
+      }
     } catch (error) {
       toast.error('Error!!')
     }
