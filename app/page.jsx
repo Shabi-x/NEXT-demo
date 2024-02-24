@@ -12,6 +12,10 @@ export default function Home() {
     description: '',
   })
   const [TodoData, setTodoData] = useState([])
+
+  /**
+   * 拉取所有todos项目
+   */
   const fetchTodo = async () => {
     try {
       const res = await axios.get('/api')
@@ -22,12 +26,13 @@ export default function Home() {
         toast.error('No todos found or an error occurred.')
       }
     } catch (error) {
-      // 处理请求错误
       toast.error('Error fetching todos.')
       console.error('Request failed:', error)
     }
   }
-
+  /**
+   * 删除todos项目
+   */
   const deleteTodo = async (id) => {
     const res = await axios.delete('/api', {
       params: {
@@ -37,13 +42,19 @@ export default function Home() {
     toast.success(res.data.msg)
     fetchTodo()
   }
-
+  /**
+   * 完成todos项目
+   */
   const completeTodo = async (id) => {
-    const res = await axios.put('/api', {
-      params: {
-        mongoId: id,
-      },
-    })
+    const res = await axios.put(
+      '/api',
+      {},
+      {
+        params: {
+          mongoId: id,
+        },
+      }
+    )
     toast.success(res.data.msg)
     fetchTodo()
   }
@@ -98,8 +109,8 @@ export default function Home() {
       </form>
 
       <div className="relative overflow-x-auto mt-24 w-[60%] mx-auto">
-        <table className="w-full text-sm text-left rtl:text-right">
-          <thead className="text-xs uppercase">
+        <table className="w-full text-sm text-left rtl:text-right ">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 ID
@@ -126,7 +137,7 @@ export default function Home() {
                   id={index}
                   title={item.title}
                   description={item.description}
-                  completed={item.completed}
+                  completed={item.isCompleted}
                   mongoId={item._id}
                   deleteTodo={deleteTodo}
                   completeTodo={completeTodo}
